@@ -10,6 +10,13 @@ import static java.lang.Character.isLetter;
 public class FenValidator {
 	private static final String FEN_FORMAT_REGEX = "([rnbqkpRNBQKP1-8]+/){7}[rnbqkpRNBQKP1-8]+";
 
+	public static void validate(String fen) throws InvalidFenException {
+		validateFormat(fen);
+		String[] ranks = fen.split("/");
+		validateNumberOfPieces(ranks);
+		validatePiecesPlacement(ranks);
+	}
+
 	private static void validateFormat(String fen) throws InvalidFenException {
 		if (Objects.isNull(fen) || !fen.matches(FEN_FORMAT_REGEX)) {
 			throw new InvalidFenException("Invalid FEN format");
@@ -39,12 +46,5 @@ public class FenValidator {
 
 	private static int toInteger(char c) {
 		return c - 48;
-	}
-
-	public void validate(String fen) throws InvalidFenException {
-		validateFormat(fen);
-		String[] ranks = fen.split("/");
-		validateNumberOfPieces(ranks);
-		validatePiecesPlacement(ranks);
 	}
 }
