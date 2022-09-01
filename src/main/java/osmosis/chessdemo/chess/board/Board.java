@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Board {
-	@SuppressWarnings("SpellCheckingInspection")
 	private static final String NEW_GAME_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 	private final HashMap<String, Piece> pieces;
 	private GridPane boardGridPane;
