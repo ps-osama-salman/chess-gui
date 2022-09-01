@@ -35,6 +35,7 @@ public class Board {
 	}
 
 	public static Board createChessBoard(String fen) throws InvalidFenException {
+		FenValidator.validate(fen);
 		final Board board = new Board();
 		HashMap<String, Piece> pieces = board.pieces;
 		int rank = 8;
