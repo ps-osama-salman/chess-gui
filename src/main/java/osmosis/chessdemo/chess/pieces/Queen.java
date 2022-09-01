@@ -4,15 +4,16 @@ import javafx.scene.image.Image;
 import osmosis.chessdemo.chess.helper.ChessPosition;
 import osmosis.chessdemo.functionailties.DraggableImageView;
 
-import java.util.Objects;
+import static osmosis.chessdemo.chess.pieces.symbol.PieceSymbolProvider.getBlackPieceSymbol;
+import static osmosis.chessdemo.chess.pieces.symbol.PieceSymbolProvider.getWhitePieceSymbol;
 
 public class Queen extends Piece {
 	private static final Image BLACK_SYMBOL;
 	private static final Image WHITE_SYMBOL;
 
 	static {
-		BLACK_SYMBOL = new Image(Objects.requireNonNull(Rook.class.getResource("/osmosis/chessdemo/images/pieces/black_queen.png")).toExternalForm());
-		WHITE_SYMBOL = new Image(Objects.requireNonNull(Rook.class.getResource("/osmosis/chessdemo/images/pieces/white_queen.png")).toExternalForm());
+		BLACK_SYMBOL = getBlackPieceSymbol(getPieceName());
+		WHITE_SYMBOL = getWhitePieceSymbol(getPieceName());
 	}
 
 	private DraggableImageView symbol;
@@ -24,6 +25,10 @@ public class Queen extends Piece {
 		} else {
 			symbol = new DraggableImageView(WHITE_SYMBOL);
 		}
+	}
+
+	private static String getPieceName() {
+		return Queen.class.getSimpleName().toLowerCase();
 	}
 
 	public DraggableImageView getImageView() {

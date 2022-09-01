@@ -48,8 +48,4 @@ public abstract class Piece {
 				", position=" + position +
 				'}';
 	}
-
-	public enum PieceColor {
-		BLACK, WHITE
-	}
 }

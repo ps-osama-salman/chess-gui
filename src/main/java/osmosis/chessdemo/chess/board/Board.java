@@ -20,11 +20,11 @@ public class Board {
 	private static final String NEW_GAME_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 	private final HashMap<String, Piece> pieces;
 	private GridPane boardGridPane;
-	private Piece.PieceColor turn;
+	private PieceColor turn;
 
 	private Board() {
 		pieces = new HashMap<>();
-		turn = Piece.PieceColor.WHITE;
+		turn = PieceColor.WHITE;
 	}
 
 	public static Board createChessBoard() {
@@ -56,7 +56,7 @@ public class Board {
 			if (!Character.isAlphabetic(c)) {
 				throw new InvalidFenException();
 			}
-			Piece.PieceColor color = Character.isLowerCase(c) ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
+			PieceColor color = Character.isLowerCase(c) ? PieceColor.BLACK : PieceColor.WHITE;
 			c = Character.toLowerCase(c);
 			Piece piece;
 			ChessPosition position = new ChessPosition(file, rank);
@@ -114,7 +114,7 @@ public class Board {
 			pieces.remove(piece.getPosition().getChessNotation());
 			piece.setPosition(destinationPosition);
 			pieces.put(piece.getPosition().getChessNotation(), piece);
-			turn = turn == Piece.PieceColor.WHITE ? Piece.PieceColor.BLACK : Piece.PieceColor.WHITE;
+			turn = turn == PieceColor.WHITE ? PieceColor.BLACK : PieceColor.WHITE;
 			if (piece instanceof Pawn) {
 				int destinationRank = destinationPosition.getRank();
 				if (destinationRank == 8 || destinationRank == 1) {
@@ -139,7 +139,7 @@ public class Board {
 			int destinationRank = destinationPosition.getRank();
 			int rankDifference = destinationRank - rank;
 			int fileDifference = Math.abs(destinationPosition.getFile() - position.getFile());
-			if (piece.getColor() == Piece.PieceColor.BLACK) {
+			if (piece.getColor() == PieceColor.BLACK) {
 				rank = 9 - position.getRank();
 				rankDifference *= -1;
 			}
@@ -276,7 +276,7 @@ public class Board {
 				int takeFileLeft = mockPiece.getPosition().getFile() - 1;
 				int takeRank;
 				int kingFile = king.getPosition().getFile();
-				if (mockPiece.getColor() == Piece.PieceColor.WHITE) {
+				if (mockPiece.getColor() == PieceColor.WHITE) {
 					takeRank = mockPiece.getPosition().getRank() + 1;
 				} else {
 					takeRank = mockPiece.getPosition().getRank() - 1;
