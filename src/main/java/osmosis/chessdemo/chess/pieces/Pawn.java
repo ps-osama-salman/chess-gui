@@ -1,9 +1,16 @@
 package osmosis.chessdemo.chess.pieces;
 
 import javafx.scene.image.Image;
-import osmosis.chessdemo.chess.helper.ChessPosition;
+import osmosis.chessdemo.chess.exceptions.InvalidPromotionMoveException;
 import osmosis.chessdemo.chess.helper.PieceDragListener;
+import osmosis.chessdemo.chess.position.ChessPosition;
+import osmosis.chessdemo.chess.position.File;
+import osmosis.chessdemo.chess.position.Rank;
 import osmosis.chessdemo.functionailties.DraggableImageView;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
 
 import static osmosis.chessdemo.chess.pieces.symbol.PieceSymbolProvider.getBlackPieceSymbol;
 import static osmosis.chessdemo.chess.pieces.symbol.PieceSymbolProvider.getWhitePieceSymbol;
@@ -11,10 +18,15 @@ import static osmosis.chessdemo.chess.pieces.symbol.PieceSymbolProvider.getWhite
 public class Pawn extends Piece {
 	private static final Image BLACK_SYMBOL;
 	private static final Image WHITE_SYMBOL;
+	private static final Map<PromotionPiece, BiFunction<PieceColor, ChessPosition, Piece>> PROMOTION_MAP = new HashMap<>();
 
 	static {
 		BLACK_SYMBOL = getBlackPieceSymbol(getPieceName());
 		WHITE_SYMBOL = getWhitePieceSymbol(getPieceName());
+		PROMOTION_MAP.put(PromotionPiece.Queen, Queen::new);
+		PROMOTION_MAP.put(PromotionPiece.Rook, Rook::new);
+		PROMOTION_MAP.put(PromotionPiece.Knight, Knight::new);
+		PROMOTION_MAP.put(PromotionPiece.Bishop, Bishop::new);
 	}
 
 	private DraggableImageView symbol;
@@ -37,41 +49,50 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean validMovement(ChessPosition destinationPosition) {
-		int fileDifference = Math.abs(destinationPosition.getFile() - position.getFile());
-		int rankDifference = destinationPosition.getRank() - position.getRank();
+	public boolean isMovementValid(ChessPosition destinationPosition) {
+		int fileDifference = Math.abs(destinationPosition.getFile().getFileNumber() - position.getFile().getFileNumber());
+		int rankDifference = destinationPosition.getRank().getRankNumber() - position.getRank().getRankNumber();
 		if (color == PieceColor.BLACK) {
 			rankDifference *= -1;
 		}
-		if (fileDifference == 0 && rankDifference == 2) {
-			return true;
-		}
-		return fileDifference >= 0 && fileDifference <= 1
-				&& (rankDifference == 1);
+		return isAdvance(rankDifference, fileDifference) || isTake(rankDifference, fileDifference) || isTwoSquareMove(rankDifference, fileDifference);
 	}
 
-	public Piece promote(Promotion promotion, ChessPosition position) {
-		Piece piece;
-		switch (promotion) {
-			case Queen:
-				piece = new Queen(color, position);
-				break;
-			case Rook:
-				piece = new Rook(color, position);
-				break;
-			case Knight:
-				piece = new Knight(color, position);
-				break;
-			case Bishop:
-				piece = new Bishop(color, position);
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown argument " + promotion);
-		}
-		PieceDragListener dragListener = (PieceDragListener) getDragListener();
+	private boolean isAdvance(int rankDifference, int fileDifference) {
+		return rankDifference == 1 && fileDifference == 0;
+	}
+
+	private boolean isTake(int rankDifference, int fileDifference) {
+		return rankDifference == 1 && fileDifference == 1;
+	}
+
+	private boolean isTwoSquareMove(int rankDifference, int fileDifference) {
+		return fileDifference == 0 && rankDifference == 2 && isRankValidForTwoSquareMove();
+	}
+
+	private boolean isRankValidForTwoSquareMove() {
+		return (color == PieceColor.BLACK && Rank.SEVENTH.equals(position.getRank())) || (color == PieceColor.WHITE && Rank.SECOND.equals(position.getRank()));
+	}
+
+	public Piece promote(PromotionPiece promotionPiece, File file) {
+		Piece piece = getPromotionPiece(promotionPiece, file);
+		PieceDragListener dragListener = getDragListener();
 		dragListener.setPiece(piece);
 		piece.setDragListener(dragListener);
 		return piece;
+	}
+
+	private Piece getPromotionPiece(PromotionPiece promotionPiece, File file) {
+		ChessPosition position = getPromotionPosition(file);
+		if (!isMovementValid(position)) {
+			throw new InvalidPromotionMoveException();
+		}
+		Piece piece = PROMOTION_MAP.get(promotionPiece).apply(color, position);
+		return piece;
+	}
+
+	private ChessPosition getPromotionPosition(File file) {
+		return new ChessPosition(file, PieceColor.WHITE.equals(color) ? Rank.EIGHTH : Rank.FIRST);
 	}
 
 	@Override
@@ -79,7 +100,7 @@ public class Pawn extends Piece {
 		return new Pawn(color, position);
 	}
 
-	public enum Promotion {
+	public enum PromotionPiece {
 		Queen, Rook, Knight, Bishop
 	}
 }

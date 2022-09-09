@@ -1,9 +1,8 @@
 package osmosis.chessdemo.chess.pieces;
 
 
-import osmosis.chessdemo.chess.helper.ChessPosition;
 import osmosis.chessdemo.chess.helper.PieceDragListener;
-import osmosis.chessdemo.functionailties.DragListener;
+import osmosis.chessdemo.chess.position.ChessPosition;
 import osmosis.chessdemo.functionailties.DraggableImageView;
 
 public abstract class Piece {
@@ -27,11 +26,11 @@ public abstract class Piece {
 		this.position = chessPosition;
 	}
 
-	public abstract boolean validMovement(ChessPosition destinationPosition);
+	public abstract boolean isMovementValid(ChessPosition destinationPosition);
 
 	public abstract DraggableImageView getImageView();
 
-	public DragListener getDragListener() {
+	public PieceDragListener getDragListener() {
 		return getImageView().getDragListener();
 	}
 

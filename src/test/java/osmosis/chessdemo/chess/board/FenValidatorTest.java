@@ -9,7 +9,7 @@ import osmosis.chessdemo.chess.exceptions.InvalidFenException;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static osmosis.chessdemo.chess.board.FenValidator.validate;
+import static osmosis.chessdemo.chess.fen.FenValidator.validate;
 
 class FenValidatorTest {
 

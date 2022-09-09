@@ -1,10 +1,11 @@
-package osmosis.chessdemo.chess.board;
+package osmosis.chessdemo.chess.fen;
 
 import osmosis.chessdemo.chess.exceptions.InvalidFenException;
 
 import java.util.Arrays;
 import java.util.Objects;
 
+import static java.lang.Character.getNumericValue;
 import static java.lang.Character.isLetter;
 
 public class FenValidator {
@@ -41,10 +42,6 @@ public class FenValidator {
 	}
 
 	private static int getNumberOfPieces(String rank) {
-		return rank.chars().map(c -> (isLetter(c)) ? 1 : toInteger((char) c)).sum();
-	}
-
-	private static int toInteger(char c) {
-		return c - 48;
+		return rank.chars().map(c -> (isLetter(c)) ? 1 : getNumericValue(c)).sum();
 	}
 }
