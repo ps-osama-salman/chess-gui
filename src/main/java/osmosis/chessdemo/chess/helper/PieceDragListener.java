@@ -3,6 +3,8 @@ package osmosis.chessdemo.chess.helper;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import osmosis.chessdemo.chess.board.Board;
 import osmosis.chessdemo.chess.pieces.Piece;
 import osmosis.chessdemo.chess.position.ChessPosition;
@@ -21,6 +23,23 @@ public class PieceDragListener implements DragListener {
 		this.piece = piece;
 	}
 
+	private static Point2D getCenterPoint(Bounds bounds) {
+		return new Point2D((bounds.getMinX() + bounds.getMaxX()) / 2, (bounds.getMinY() + bounds.getMaxY()) / 2);
+	}
+
+	private static Location getLocation(Node node) {
+		Bounds bounds = node.localToScene(node.getBoundsInLocal());
+		Point2D center = getCenterPoint(bounds);
+		double sideLength = node.getBoundsInLocal().getHeight();
+		int x = getIndex(center.getX(), sideLength);
+		int y = getIndex(center.getY(), sideLength);
+		return new Location(x, y);
+	}
+
+	private static int getIndex(double variable, double sideLength) {
+		return (int) (variable / sideLength);
+	}
+
 	public Piece getPiece() {
 		return piece;
 	}
@@ -31,14 +50,18 @@ public class PieceDragListener implements DragListener {
 
 	@Override
 	public void accept(Node node, MouseEventHandler.DragEvent dragEvent) {
-		Bounds bounds = node.localToScene(node.getBoundsInLocal());
-		Point2D center = new Point2D((bounds.getMinX() + bounds.getMaxX()) / 2, (bounds.getMinY() + bounds.getMaxY()) / 2);
-		double sideLength = node.getBoundsInLocal().getHeight();
-		int x = (int) (center.getX() / sideLength);
-		int y = (int) (center.getY() / sideLength);
-		ChessPosition destinationPosition = new ChessPosition(getFile(x).nextFile(), getRank(y + 1).getInverse());
-		if (dragEvent.equals(MouseEventHandler.DragEvent.DragEnd)) {
-			board.makeMove(getPiece(), destinationPosition);
+		if (!dragEvent.equals(MouseEventHandler.DragEvent.DragEnd)) {
+			return;
 		}
+		Location location = getLocation(node);
+		ChessPosition destinationPosition = new ChessPosition(getFile(location.getX()).nextFile(), getRank(location.getY() + 1).getInverse());
+		board.makeMove(getPiece(), destinationPosition);
+	}
+
+	@Getter
+	@AllArgsConstructor
+	private static class Location {
+		private final int x;
+		private final int y;
 	}
 }
