@@ -8,31 +8,19 @@ import static osmosis.chessdemo.chess.pieces.symbol.PieceSymbolProvider.getBlack
 import static osmosis.chessdemo.chess.pieces.symbol.PieceSymbolProvider.getWhitePieceSymbol;
 
 public class King extends Piece {
-	private static final Image BLACK_SYMBOL;
-	private static final Image WHITE_SYMBOL;
-
-	static {
-		BLACK_SYMBOL = getBlackPieceSymbol(getPieceName());
-		WHITE_SYMBOL = getWhitePieceSymbol(getPieceName());
-	}
-
-	private DraggableImageView symbol;
+	private static final Image BLACK_SYMBOL = getBlackPieceSymbol(getPieceName());
+	private static final Image WHITE_SYMBOL = getWhitePieceSymbol(getPieceName());
 
 	public King(PieceColor color, ChessPosition position) {
-		super(color, position);
-		if (color == PieceColor.BLACK) {
-			symbol = new DraggableImageView(BLACK_SYMBOL);
-		} else {
-			symbol = new DraggableImageView(WHITE_SYMBOL);
-		}
+		super(color, position, getSymbol(color));
+	}
+
+	private static DraggableImageView getSymbol(PieceColor color) {
+		return new DraggableImageView(PieceColor.BLACK.equals(color) ? BLACK_SYMBOL : WHITE_SYMBOL);
 	}
 
 	private static String getPieceName() {
 		return King.class.getSimpleName().toLowerCase();
-	}
-
-	public DraggableImageView getImageView() {
-		return symbol = symbol.copy();
 	}
 
 	@Override

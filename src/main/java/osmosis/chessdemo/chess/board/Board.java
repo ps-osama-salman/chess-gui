@@ -141,7 +141,7 @@ public class Board {
 		}
 	}
 
-	public void refreshBoard() {
+	private void refreshBoard() {
 		boardGridPane.getChildren().clear();
 		double sideLength = boardGridPane.getPrefHeight() / 8;
 		for (int x = 0; x < 8; x++) {

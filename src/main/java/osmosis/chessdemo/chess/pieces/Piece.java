@@ -7,11 +7,13 @@ import osmosis.chessdemo.functionailties.DraggableImageView;
 
 public abstract class Piece {
 	protected final PieceColor color;
+	private final DraggableImageView symbol;
 	protected ChessPosition position;
 
-	protected Piece(PieceColor color, ChessPosition position) {
+	protected Piece(PieceColor color, ChessPosition position, DraggableImageView symbol) {
 		this.color = color;
 		this.position = position;
+		this.symbol = symbol;
 	}
 
 	public PieceColor getColor() {
@@ -28,23 +30,22 @@ public abstract class Piece {
 
 	public abstract boolean isMovementValid(ChessPosition destinationPosition);
 
-	public abstract DraggableImageView getImageView();
+	public final DraggableImageView getImageView() {
+		return this.symbol;
+	}
 
 	public PieceDragListener getDragListener() {
 		return getImageView().getDragListener();
 	}
 
 	public void setDragListener(PieceDragListener dragListener) {
-		getImageView().setDragListener(dragListener);
+		this.symbol.setDragListener(dragListener);
 	}
 
 	public abstract Piece copy();
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "{" +
-				"color=" + (color == PieceColor.BLACK ? "Black" : "White") +
-				", position=" + position +
-				'}';
+		return getClass().getSimpleName() + "{" + "color=" + (color == PieceColor.BLACK ? "Black" : "White") + ", position=" + position + '}';
 	}
 }

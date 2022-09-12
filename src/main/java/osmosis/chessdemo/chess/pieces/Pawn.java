@@ -16,36 +16,27 @@ import static osmosis.chessdemo.chess.pieces.symbol.PieceSymbolProvider.getBlack
 import static osmosis.chessdemo.chess.pieces.symbol.PieceSymbolProvider.getWhitePieceSymbol;
 
 public class Pawn extends Piece {
-	private static final Image BLACK_SYMBOL;
-	private static final Image WHITE_SYMBOL;
+	private static final Image BLACK_SYMBOL = getBlackPieceSymbol(getPieceName());
+	private static final Image WHITE_SYMBOL = getWhitePieceSymbol(getPieceName());
 	private static final Map<PromotionPiece, BiFunction<PieceColor, ChessPosition, Piece>> PROMOTION_MAP = new HashMap<>();
 
 	static {
-		BLACK_SYMBOL = getBlackPieceSymbol(getPieceName());
-		WHITE_SYMBOL = getWhitePieceSymbol(getPieceName());
 		PROMOTION_MAP.put(PromotionPiece.Queen, Queen::new);
 		PROMOTION_MAP.put(PromotionPiece.Rook, Rook::new);
 		PROMOTION_MAP.put(PromotionPiece.Knight, Knight::new);
 		PROMOTION_MAP.put(PromotionPiece.Bishop, Bishop::new);
 	}
 
-	private DraggableImageView symbol;
+	public Pawn(PieceColor color, ChessPosition position) {
+		super(color, position, getSymbol(color));
+	}
 
-	public Pawn(PieceColor color, ChessPosition chessPosition) {
-		super(color, chessPosition);
-		if (color == PieceColor.BLACK) {
-			symbol = new DraggableImageView(BLACK_SYMBOL);
-		} else {
-			symbol = new DraggableImageView(WHITE_SYMBOL);
-		}
+	private static DraggableImageView getSymbol(PieceColor color) {
+		return new DraggableImageView(PieceColor.BLACK.equals(color) ? BLACK_SYMBOL : WHITE_SYMBOL);
 	}
 
 	private static String getPieceName() {
 		return Pawn.class.getSimpleName().toLowerCase();
-	}
-
-	public DraggableImageView getImageView() {
-		return symbol = symbol.copy();
 	}
 
 	@Override
@@ -87,8 +78,7 @@ public class Pawn extends Piece {
 		if (!isMovementValid(position)) {
 			throw new InvalidPromotionMoveException();
 		}
-		Piece piece = PROMOTION_MAP.get(promotionPiece).apply(color, position);
-		return piece;
+		return PROMOTION_MAP.get(promotionPiece).apply(color, position);
 	}
 
 	private ChessPosition getPromotionPosition(File file) {
