@@ -1,5 +1,6 @@
 package osmosis.chessdemo.chess.fen;
 
+import osmosis.chessdemo.chess.board.BoardSquares;
 import osmosis.chessdemo.chess.exceptions.InvalidFenException;
 import osmosis.chessdemo.chess.pieces.*;
 import osmosis.chessdemo.chess.position.ChessPosition;
@@ -24,13 +25,13 @@ public class FenParser {
 		PIECE_CREATOR_MAP.put('r', Rook::new);
 	}
 
-	public static Collection<Piece> parse(String fen) throws InvalidFenException {
+	public static BoardSquares parse(String fen) throws InvalidFenException {
 		FenValidator.validate(fen);
 		Collection<Piece> pieces = new HashSet<>();
 		int rankNumber = 8;
-		int fileNumber = 1;
 		String[] ranks = fen.split("/");
 		for (String rank : ranks) {
+			int fileNumber = 1;
 			for (char character : rank.toCharArray()) {
 				if (Character.isDigit(character)) {
 					fileNumber += Character.getNumericValue(character);
@@ -41,9 +42,8 @@ public class FenParser {
 				fileNumber++;
 			}
 			rankNumber--;
-			fileNumber = 1;
 		}
-		return pieces;
+		return new BoardSquares(pieces);
 	}
 
 	private static Piece getPiece(char c, ChessPosition position) {

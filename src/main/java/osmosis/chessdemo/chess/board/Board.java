@@ -4,14 +4,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import osmosis.chessdemo.chess.exceptions.*;
 import osmosis.chessdemo.chess.fen.FenParser;
-import osmosis.chessdemo.chess.helper.PieceDragListener;
 import osmosis.chessdemo.chess.pieces.*;
 import osmosis.chessdemo.chess.position.ChessPosition;
 import osmosis.chessdemo.chess.position.File;
 import osmosis.chessdemo.chess.position.Rank;
 import osmosis.chessdemo.functionailties.DraggableImageView;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import static osmosis.chessdemo.chess.move.validator.MoveValidator.isEmptyPath;
@@ -38,11 +36,7 @@ public class Board {
 	}
 
 	public static Board createChessBoard(String fen, GridPane boardGridPane) throws InvalidFenException {
-		Collection<Piece> pieces = FenParser.parse(fen);
-		pieces.forEach(piece -> piece.setDragListener(new PieceDragListener(piece)));
-		BoardSquares boardSquares = new BoardSquares();
-		pieces.forEach(boardSquares::put);
-		return new Board(boardGridPane, boardSquares);
+		return new Board(boardGridPane, FenParser.parse(fen));
 	}
 
 	private static void validatePawnMovement(Piece piece, File destinationFile, boolean occupyingPiecePresent) {

@@ -13,12 +13,13 @@ import static osmosis.chessdemo.chess.position.ChessNotationProvider.getChessNot
 public class BoardSquares {
 	private final Map<String, Piece> pieces;
 
-	public BoardSquares() {
-		pieces = new HashMap<>();
+	public BoardSquares(Collection<Piece> pieces) {
+		this.pieces = new HashMap<>();
+		pieces.forEach(this::put);
 	}
 
 	private static BoardSquares of(Collection<Piece> pieces) {
-		BoardSquares boardSquares = new BoardSquares();
+		BoardSquares boardSquares = new BoardSquares(pieces);
 		pieces.forEach(boardSquares::put);
 		return boardSquares;
 	}

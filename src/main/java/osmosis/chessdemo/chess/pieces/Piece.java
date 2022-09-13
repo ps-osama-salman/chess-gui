@@ -14,6 +14,7 @@ public abstract class Piece {
 		this.color = color;
 		this.position = position;
 		this.symbol = symbol;
+		this.symbol.setDragListener(new PieceDragListener(this));
 	}
 
 	public PieceColor getColor() {
