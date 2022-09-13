@@ -153,7 +153,7 @@ public class Board {
 			pieceImageView.setFitWidth(sideLength);
 			pieceImageView.setFitHeight(sideLength);
 			ChessPosition position = piece.getPosition();
-			boardGridPane.add(pieceImageView, (position.getFile().getFileNumber() - 1), 7 - (position.getRank().getRankNumber() - 1));
+			boardGridPane.add(pieceImageView, (position.getFile().getFileNumber() - 1), (position.getRank().getInverse().getRankNumber() - 1));
 		}
 	}
 
