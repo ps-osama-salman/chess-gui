@@ -6,6 +6,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import osmosis.chessdemo.chess.board.Board;
+import osmosis.chessdemo.chess.move.initiator.MoveInitiator;
 
 import java.net.URL;
 import java.util.Objects;
@@ -17,13 +18,13 @@ public class MainController extends Controller {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-		// Board background
 
+		// Board background
 		BackgroundSize backgroundSize = new BackgroundSize(boardGridPane.getPrefWidth(), boardGridPane.getPrefHeight(), true, true, true, true);
 		Image backgroundImage = new Image(Objects.requireNonNull(getClass().getResource("/osmosis/chessdemo/images/boards/board_background.png")).toExternalForm());
 		boardGridPane.setBackground(new Background(new BackgroundImage(backgroundImage, null, null, null, backgroundSize)));
 
-		Board board = Board.createChessBoard();
-		board.setBoardGridPane(boardGridPane);
+		Board board = Board.createChessBoard(boardGridPane);
+		MoveInitiator.getInstance().registerBoard(board);
 	}
 }

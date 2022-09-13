@@ -1,5 +1,6 @@
-package osmosis.chessdemo.chess.board;
+package osmosis.chessdemo.chess.move.validator;
 
+import osmosis.chessdemo.chess.board.BoardSquares;
 import osmosis.chessdemo.chess.position.ChessPosition;
 
 import static java.lang.Math.max;

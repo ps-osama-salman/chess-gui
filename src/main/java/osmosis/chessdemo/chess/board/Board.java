@@ -14,35 +14,35 @@ import osmosis.chessdemo.functionailties.DraggableImageView;
 import java.util.Collection;
 import java.util.Optional;
 
-import static osmosis.chessdemo.chess.board.MoveValidator.isEmptyPath;
+import static osmosis.chessdemo.chess.move.validator.MoveValidator.isEmptyPath;
 
 public class Board {
 	private static final String NEW_GAME_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-
-	private BoardSquares boardSquares;
-	private GridPane boardGridPane;
+	private final GridPane boardGridPane;
+	private final BoardSquares boardSquares;
 	private PieceColor currentTurn;
 
-	private Board() {
-		currentTurn = PieceColor.WHITE;
+	private Board(GridPane boardGridPane, BoardSquares boardSquares) {
+		this.boardGridPane = boardGridPane;
+		this.boardSquares = boardSquares;
+		this.currentTurn = PieceColor.WHITE;
+		refreshBoard();
 	}
 
-	public static Board createChessBoard() {
+	public static Board createChessBoard(GridPane boardGridPane) {
 		try {
-			return createChessBoard(NEW_GAME_FEN);
+			return createChessBoard(NEW_GAME_FEN, boardGridPane);
 		} catch (InvalidFenException e) {
 			throw new RuntimeException("Internal new-game FEN is invalid or is not being parsed correctly");
 		}
 	}
 
-	public static Board createChessBoard(String fen) throws InvalidFenException {
+	public static Board createChessBoard(String fen, GridPane boardGridPane) throws InvalidFenException {
 		Collection<Piece> pieces = FenParser.parse(fen);
-		Board board = new Board(); // TODO Fix listener callback
-		pieces.forEach(piece -> piece.setDragListener(new PieceDragListener(board, piece)));
+		pieces.forEach(piece -> piece.setDragListener(new PieceDragListener(piece)));
 		BoardSquares boardSquares = new BoardSquares();
 		pieces.forEach(boardSquares::put);
-		board.setBoardSquares(boardSquares);
-		return board;
+		return new Board(boardGridPane, boardSquares);
 	}
 
 	private static void validatePawnMovement(Piece piece, File destinationFile, boolean occupyingPiecePresent) {
@@ -70,15 +70,6 @@ public class Board {
 		if (!piece.isMovementValid(destinationPosition)) {
 			throw new InvalidMoveException("Invalid piece movement");
 		}
-	}
-
-	public void setBoardSquares(BoardSquares boardSquares) {
-		this.boardSquares = boardSquares;
-	}
-
-	public void setBoardGridPane(GridPane boardGridPane) {
-		this.boardGridPane = boardGridPane;
-		refreshBoard();
 	}
 
 	public void makeMove(Piece piece, ChessPosition destinationPosition) {
