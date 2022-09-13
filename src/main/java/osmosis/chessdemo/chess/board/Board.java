@@ -72,6 +72,13 @@ public class Board {
 		}
 	}
 
+	private static Pane createEmptyCell(double sideLength) {
+		Pane emptyCell = new Pane();
+		emptyCell.minHeightProperty().set(sideLength);
+		emptyCell.minWidthProperty().set(sideLength);
+		return emptyCell;
+	}
+
 	public void makeMove(Piece piece, ChessPosition destinationPosition) {
 		try {
 			validateMove(piece, destinationPosition);
@@ -137,9 +144,7 @@ public class Board {
 		double sideLength = boardGridPane.getPrefHeight() / 8;
 		for (int x = 0; x < 8; x++) {
 			for (int y = 0; y < 8; y++) {
-				Pane emptyCell = new Pane();
-				emptyCell.minHeightProperty().set(sideLength);
-				emptyCell.minWidthProperty().set(sideLength);
+				Pane emptyCell = createEmptyCell(sideLength);
 				boardGridPane.add(emptyCell, x, y);
 			}
 		}
