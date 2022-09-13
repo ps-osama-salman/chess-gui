@@ -31,7 +31,7 @@ public abstract class Piece {
 	public abstract boolean isMovementValid(ChessPosition destinationPosition);
 
 	public final DraggableImageView getImageView() {
-		return this.symbol;
+		return this.symbol.copy();
 	}
 
 	public PieceDragListener getDragListener() {
