@@ -19,7 +19,13 @@ public class MoveInitiator {
 	}
 
 	public void initiateMove(Piece piece, ChessPosition destinationPosition) {
-		boards.forEach(board -> board.makeMove(piece, destinationPosition));
+		boards.forEach(board -> {
+			try {
+				board.makeMove(piece, destinationPosition);
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
+		});
 	}
 
 	public void registerBoard(Board board) {
