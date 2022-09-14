@@ -52,7 +52,7 @@ public class PieceDragListener implements DragListener {
 			return;
 		}
 		Location location = getLocation(node);
-		ChessPosition destinationPosition = new ChessPosition(getFile(location.getX()).nextFile(), getRank(location.getY() + 1).getInverse());
+		ChessPosition destinationPosition = new ChessPosition(getFile(location.getX() + 1), getRank(location.getY() + 1).getInverse());
 		MoveInitiator.getInstance().initiateMove(getPiece(), destinationPosition);
 	}
 
