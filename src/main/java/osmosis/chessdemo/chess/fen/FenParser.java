@@ -14,16 +14,16 @@ import static osmosis.chessdemo.chess.position.File.getFile;
 import static osmosis.chessdemo.chess.position.Rank.getRank;
 
 public class FenParser {
-	private static final HashMap<Character, BiFunction<PieceColor, ChessPosition, Piece>> PIECE_CREATOR_MAP = new HashMap<>();
-
-	static {
-		PIECE_CREATOR_MAP.put('b', Bishop::new);
-		PIECE_CREATOR_MAP.put('k', King::new);
-		PIECE_CREATOR_MAP.put('n', Knight::new);
-		PIECE_CREATOR_MAP.put('p', Pawn::new);
-		PIECE_CREATOR_MAP.put('q', Queen::new);
-		PIECE_CREATOR_MAP.put('r', Rook::new);
-	}
+	private static final HashMap<Character, BiFunction<PieceColor, ChessPosition, Piece>> PIECE_CREATOR_MAP = new HashMap<>() {
+		{
+			put('b', Bishop::new);
+			put('k', King::new);
+			put('n', Knight::new);
+			put('p', Pawn::new);
+			put('q', Queen::new);
+			put('r', Rook::new);
+		}
+	};
 
 	public static BoardSquares parse(String fen) throws InvalidFenException {
 		FenValidator.validate(fen);
