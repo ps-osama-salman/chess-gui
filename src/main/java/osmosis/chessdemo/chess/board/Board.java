@@ -3,7 +3,6 @@ package osmosis.chessdemo.chess.board;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import osmosis.chessdemo.chess.exceptions.*;
-import osmosis.chessdemo.chess.fen.FenParser;
 import osmosis.chessdemo.chess.pieces.*;
 import osmosis.chessdemo.chess.position.ChessPosition;
 import osmosis.chessdemo.chess.position.File;
@@ -15,28 +14,15 @@ import java.util.Optional;
 import static osmosis.chessdemo.chess.move.validator.MoveValidator.isEmptyPath;
 
 public class Board {
-	private static final String NEW_GAME_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 	private final GridPane boardGridPane;
 	private final BoardSquares boardSquares;
 	private PieceColor currentTurn;
 
-	private Board(GridPane boardGridPane, BoardSquares boardSquares) {
+	protected Board(GridPane boardGridPane, BoardSquares boardSquares) {
 		this.boardGridPane = boardGridPane;
 		this.boardSquares = boardSquares;
 		this.currentTurn = PieceColor.WHITE;
 		refreshBoard();
-	}
-
-	public static Board createChessBoard(GridPane boardGridPane) {
-		try {
-			return createChessBoard(NEW_GAME_FEN, boardGridPane);
-		} catch (InvalidFenException e) {
-			throw new RuntimeException("Internal new-game FEN is invalid or is not being parsed correctly");
-		}
-	}
-
-	public static Board createChessBoard(String fen, GridPane boardGridPane) throws InvalidFenException {
-		return new Board(boardGridPane, FenParser.parse(fen));
 	}
 
 	private static void validatePawnMovement(Piece piece, File destinationFile, boolean occupyingPiecePresent) {

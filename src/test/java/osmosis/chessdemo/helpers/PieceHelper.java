@@ -1,6 +1,8 @@
 package osmosis.chessdemo.helpers;
 
-import osmosis.chessdemo.chess.pieces.*;
+import osmosis.chessdemo.chess.pieces.Piece;
+import osmosis.chessdemo.chess.pieces.PieceColor;
+import osmosis.chessdemo.chess.pieces.PieceFactory;
 import osmosis.chessdemo.chess.position.ChessPosition;
 
 import java.util.List;
@@ -11,7 +13,8 @@ import static osmosis.chessdemo.helpers.PieceColorHelper.createRandomPieceColor;
 import static osmosis.chessdemo.helpers.Random.getRandomNumberBetween;
 
 public class PieceHelper {
-	private static final List<BiFunction<PieceColor, ChessPosition, Piece>> pieceCreators = List.of(Bishop::new, King::new, Knight::new, Pawn::new, Queen::new, Rook::new);
+	private static final PieceFactory pieceFactory = new PieceFactory(BoardProviderHelper.nullBoardProvider());
+	private static final List<BiFunction<PieceColor, ChessPosition, Piece>> pieceCreators = List.of(pieceFactory::createBishop, pieceFactory::createKing, pieceFactory::createKnight, pieceFactory::createPawn, pieceFactory::createQueen, pieceFactory::createRook);
 
 	public static Piece createRandomPiece() {
 		return getRandomPieceCreator().apply(createRandomPieceColor(), createRandomPosition());

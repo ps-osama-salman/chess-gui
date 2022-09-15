@@ -5,7 +5,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import osmosis.chessdemo.chess.move.initiator.MoveInitiator;
+import osmosis.chessdemo.chess.board.Board;
 import osmosis.chessdemo.chess.pieces.Piece;
 import osmosis.chessdemo.chess.position.ChessPosition;
 import osmosis.chessdemo.functionailties.DragListener;
@@ -14,12 +14,10 @@ import osmosis.chessdemo.functionailties.MouseEventHandler;
 import static osmosis.chessdemo.chess.position.File.getFile;
 import static osmosis.chessdemo.chess.position.Rank.getRank;
 
+@AllArgsConstructor
 public class PieceDragListener implements DragListener {
+	private final Board board;
 	private Piece piece;
-
-	public PieceDragListener(Piece piece) {
-		this.piece = piece;
-	}
 
 	private static Point2D getCenterPoint(Bounds bounds) {
 		return new Point2D((bounds.getMinX() + bounds.getMaxX()) / 2, (bounds.getMinY() + bounds.getMaxY()) / 2);
@@ -53,7 +51,7 @@ public class PieceDragListener implements DragListener {
 		}
 		Location location = getLocation(node);
 		ChessPosition destinationPosition = new ChessPosition(getFile(location.getX() + 1), getRank(location.getY() + 1).getInverse());
-		MoveInitiator.getInstance().initiateMove(getPiece(), destinationPosition);
+		board.makeMove(getPiece(), destinationPosition);
 	}
 
 	@Getter

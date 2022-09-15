@@ -27,7 +27,7 @@ public class Pawn extends Piece {
 		PROMOTION_MAP.put(PromotionPiece.Bishop, Bishop::new);
 	}
 
-	public Pawn(PieceColor color, ChessPosition position) {
+	protected Pawn(PieceColor color, ChessPosition position) {
 		super(color, position, getSymbol(color));
 	}
 

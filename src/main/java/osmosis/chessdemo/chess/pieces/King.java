@@ -11,7 +11,7 @@ public class King extends Piece {
 	private static final Image BLACK_SYMBOL = getBlackPieceSymbol(getPieceName());
 	private static final Image WHITE_SYMBOL = getWhitePieceSymbol(getPieceName());
 
-	public King(PieceColor color, ChessPosition position) {
+	protected King(PieceColor color, ChessPosition position) {
 		super(color, position, getSymbol(color));
 	}
 

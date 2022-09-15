@@ -62,14 +62,14 @@ class PawnTest {
 	@Test
 	void givenInvalidFileWhenPromoteThenThrowException() {
 		Pawn pawn = new Pawn(PieceColor.WHITE, new ChessPosition(File.A, Rank.SEVENTH));
-		pawn.setDragListener(new PieceDragListener(pawn));
+		pawn.setDragListener(new PieceDragListener(null, pawn));
 		assertThrows(InvalidPromotionMoveException.class, () -> pawn.promote(PromotionPiece.Queen, File.C));
 	}
 
 	@Test
 	void givenInvalidCurrentRankWhenPromoteThenThrowException() {
 		Pawn pawn = new Pawn(PieceColor.WHITE, new ChessPosition(File.A, Rank.SIXTH));
-		pawn.setDragListener(new PieceDragListener(pawn));
+		pawn.setDragListener(new PieceDragListener(null, pawn));
 		assertThrows(InvalidPromotionMoveException.class, () -> pawn.promote(PromotionPiece.Queen, File.A));
 	}
 
@@ -77,7 +77,7 @@ class PawnTest {
 	@MethodSource("promotionParameters")
 	void givenPromotionParametersForWhitePawnWhenPromoteThenReturnNewPieceWithCorrectPosition(Class<? extends Piece> promotionPieceClass, File file) {
 		Pawn pawn = new Pawn(PieceColor.WHITE, new ChessPosition(file, Rank.SEVENTH));
-		pawn.setDragListener(new PieceDragListener(pawn));
+		pawn.setDragListener(new PieceDragListener(null, pawn));
 		Piece promotionPiece = pawn.promote(PromotionPiece.valueOf(promotionPieceClass.getSimpleName()), file);
 		assertEquals(promotionPieceClass, promotionPiece.getClass());
 		assertEquals(PieceColor.WHITE, promotionPiece.getColor());
@@ -89,7 +89,7 @@ class PawnTest {
 	@MethodSource("promotionParameters")
 	void givenPromotionParametersForBlackPawnWhenPromoteThenReturnNewPieceWithCorrectPosition(Class<? extends Piece> promotionPieceClass, File file) {
 		Pawn pawn = new Pawn(PieceColor.BLACK, new ChessPosition(file, Rank.SECOND));
-		pawn.setDragListener(new PieceDragListener(pawn));
+		pawn.setDragListener(new PieceDragListener(null, pawn));
 		Piece promotionPiece = pawn.promote(PromotionPiece.valueOf(promotionPieceClass.getSimpleName()), file);
 		assertEquals(promotionPieceClass, promotionPiece.getClass());
 		assertEquals(PieceColor.BLACK, promotionPiece.getColor());

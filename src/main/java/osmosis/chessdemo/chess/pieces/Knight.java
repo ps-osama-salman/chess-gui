@@ -11,7 +11,7 @@ public class Knight extends Piece {
 	private static final Image BLACK_SYMBOL = getBlackPieceSymbol(getPieceName());
 	private static final Image WHITE_SYMBOL = getWhitePieceSymbol(getPieceName());
 
-	public Knight(PieceColor color, ChessPosition position) {
+	protected Knight(PieceColor color, ChessPosition position) {
 		super(color, position, getSymbol(color));
 	}
 

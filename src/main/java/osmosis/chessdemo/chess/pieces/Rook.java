@@ -12,7 +12,7 @@ public class Rook extends Piece {
 	private static final Image BLACK_SYMBOL = getBlackPieceSymbol(getPieceName());
 	private static final Image WHITE_SYMBOL = getWhitePieceSymbol(getPieceName());
 
-	public Rook(PieceColor color, ChessPosition position) {
+	protected Rook(PieceColor color, ChessPosition position) {
 		super(color, position, getSymbol(color));
 	}
 
