@@ -39,7 +39,7 @@ public abstract class Piece {
 		return getImageView().getDragListener();
 	}
 
-	public void setDragListener(PieceDragListener dragListener) {
+	protected void setDragListener(PieceDragListener dragListener) {
 		this.symbol.setDragListener(dragListener);
 	}
 
