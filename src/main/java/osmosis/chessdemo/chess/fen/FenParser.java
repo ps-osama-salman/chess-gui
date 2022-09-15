@@ -8,6 +8,7 @@ import osmosis.chessdemo.chess.position.ChessPosition;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.function.BiFunction;
 
 import static osmosis.chessdemo.chess.position.File.getFile;
@@ -27,38 +28,43 @@ public class FenParser {
 
 	public static BoardSquares parse(String fen) throws InvalidFenException {
 		FenValidator.validate(fen);
-		String[] ranks = fen.split("/");
-		Collection<Piece> pieces = parsePieces(ranks);
-		return new BoardSquares(pieces);
+		return new BoardSquares(parsePieces(getRanksStrings(fen)));
 	}
 
-	private static Collection<Piece> parsePieces(String[] ranks) {
-		Collection<Piece> pieces = new HashSet<>();
-		for (int rankNumber = 8; rankNumber >= 1; rankNumber--) {
-			Collection<Piece> rankPieces = parsePieces(rankNumber, ranks[8 - rankNumber]);
-			pieces.addAll(rankPieces);
-		}
-		return pieces;
+	private static String[] getRanksStrings(String fen) {
+		return fen.split("/");
 	}
 
-	private static Collection<Piece> parsePieces(int rankNumber, String rankString) {
+	private static Collection<Piece> parsePieces(String rankString, int rankNumber) {
 		Collection<Piece> rankPieces = new HashSet<>();
-		int fileNumber = 1;
-		for (char character : rankString.toCharArray()) {
+		Iterator<Character> iterator = rankString.chars().mapToObj(c -> (char) c).iterator();
+		for (int fileNumber = 1; fileNumber <= 8; fileNumber++) {
+			char character = iterator.next();
 			if (Character.isDigit(character)) {
 				fileNumber += Character.getNumericValue(character);
 				continue;
 			}
 			ChessPosition position = new ChessPosition(getFile(fileNumber), getRank(rankNumber));
 			rankPieces.add(getPiece(character, position));
-			fileNumber++;
 		}
 		return rankPieces;
 	}
 
+	private static Collection<Piece> parsePieces(String[] ranksStrings) {
+		Collection<Piece> pieces = new HashSet<>();
+		for (int rankNumber = 8; rankNumber >= 1; rankNumber--) {
+			String rankString = ranksStrings[8 - rankNumber];
+			Collection<Piece> rankPieces = parsePieces(rankString, rankNumber);
+			pieces.addAll(rankPieces);
+		}
+		return pieces;
+	}
+
 	private static Piece getPiece(char c, ChessPosition position) {
-		PieceColor color = Character.isLowerCase(c) ? PieceColor.BLACK : PieceColor.WHITE;
-		c = Character.toLowerCase(c);
-		return PIECE_CREATOR_MAP.get(c).apply(color, position);
+		return PIECE_CREATOR_MAP.get(Character.toLowerCase(c)).apply(getPieceColor(c), position);
+	}
+
+	private static PieceColor getPieceColor(char c) {
+		return Character.isLowerCase(c) ? PieceColor.BLACK : PieceColor.WHITE;
 	}
 }
