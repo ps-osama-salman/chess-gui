@@ -27,23 +27,33 @@ public class FenParser {
 
 	public static BoardSquares parse(String fen) throws InvalidFenException {
 		FenValidator.validate(fen);
-		Collection<Piece> pieces = new HashSet<>();
-		int rankNumber = 8;
 		String[] ranks = fen.split("/");
-		for (String rank : ranks) {
-			int fileNumber = 1;
-			for (char character : rank.toCharArray()) {
-				if (Character.isDigit(character)) {
-					fileNumber += Character.getNumericValue(character);
-					continue;
-				}
-				ChessPosition position = new ChessPosition(getFile(fileNumber), getRank(rankNumber));
-				pieces.add(getPiece(character, position));
-				fileNumber++;
-			}
-			rankNumber--;
-		}
+		Collection<Piece> pieces = parsePieces(ranks);
 		return new BoardSquares(pieces);
+	}
+
+	private static Collection<Piece> parsePieces(String[] ranks) {
+		Collection<Piece> pieces = new HashSet<>();
+		for (int rankNumber = 8; rankNumber >= 1; rankNumber--) {
+			Collection<Piece> rankPieces = parsePieces(rankNumber, ranks[8 - rankNumber]);
+			pieces.addAll(rankPieces);
+		}
+		return pieces;
+	}
+
+	private static Collection<Piece> parsePieces(int rankNumber, String rankString) {
+		Collection<Piece> rankPieces = new HashSet<>();
+		int fileNumber = 1;
+		for (char character : rankString.toCharArray()) {
+			if (Character.isDigit(character)) {
+				fileNumber += Character.getNumericValue(character);
+				continue;
+			}
+			ChessPosition position = new ChessPosition(getFile(fileNumber), getRank(rankNumber));
+			rankPieces.add(getPiece(character, position));
+			fileNumber++;
+		}
+		return rankPieces;
 	}
 
 	private static Piece getPiece(char c, ChessPosition position) {
